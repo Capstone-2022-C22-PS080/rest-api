@@ -8,9 +8,12 @@ datasource db {
 }
 
 model Disease {
-    id                 Int    @id @default(autoincrement())
-    diseaseName        String @db.VarChar(80)
-    diseaseDescription String @db.Text
+    id Int @id @default(autoincrement())
+
+    diseaseName         String @map("disease_name") @db.VarChar(80)
+    diseaseDescription  String @map("disease_description") @db.Text
+    firstAidDescription String @map("first_aid_description") @db.Text
+
 
     @@map("disease")
 }
