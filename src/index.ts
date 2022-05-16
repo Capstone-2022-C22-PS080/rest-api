@@ -1,7 +1,7 @@
 import fastifyCors from '@fastify/cors';
 import fastifySwagger from '@fastify/swagger';
 import { fastify } from 'fastify';
-import diseasesRoutes from './diseases';
+import diseasesRoutes from './routes/diseases';
 
 const app = fastify({ logger: true });
 const port = process.env.PORT || 8080;
