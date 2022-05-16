@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "gen:client": "prisma generate --schema=./src/models/model.prisma"
   },
   "keywords": [],
   "author": "Muhammad Rayhan Hamada Budiman",
