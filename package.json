@@ -8,8 +8,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon",
     "gen:client": "prisma generate --schema=./src/models/model.prisma",
-    "preinstall": "pnpm i -D prisma",
-    "postinstall": "npx prisma generate"
+    "postinstall": "npx prisma generate --schema=./src/models/model.prisma"
   },
   "keywords": [],
   "author": "Muhammad Rayhan Hamada Budiman",
