@@ -1,5 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import { FastifyPluginAsync } from 'fastify';
+import db from '../common/db';
 import {
   DefaultResponse204Schema,
   DefaultResponse400Schema,
@@ -50,10 +51,20 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
       try {
         // TODO: implement
 
-        const { disease_name, disease_description, first_aid_description } =
-          req.body;
-
-        return res.code(200).send();
+        return await db.disease
+          .create({
+            data: {
+              diseaseName: req.body.disease_name,
+              diseaseDescription: req.body.disease_description,
+              firstAidDescription: req.body.first_aid_description,
+            },
+          })
+          .then(({ id }) => {
+            return res.code(200).send({ id });
+          })
+          .catch(() => {
+            return res.code(500).send();
+          });
       } catch (e) {
         return res.code(500).send();
       }
@@ -112,7 +123,26 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
       try {
         // TODO: implement
 
-        return res.code(200).send();
+        return await db.disease
+          .findMany({
+            where: {
+              diseaseName: {
+                search: req.query.nameLike,
+              },
+            },
+          })
+          .then((vals) => {
+            return res.code(200).send(
+              vals.map((v) => ({
+                disease_name: v.diseaseName,
+                disease_description: v.diseaseDescription,
+                first_aid_description: v.firstAidDescription,
+              }))
+            );
+          })
+          .catch(() => {
+            return res.code(500).send();
+          });
       } catch (e) {
         return res.code(500).send();
       }
@@ -124,7 +154,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
    */
 
   const getDiseaseParamsSchema = Type.Object({
-    id: Type.String({ description: 'Disease Id' }),
+    id: Type.Number({ description: 'Disease Id' }),
   });
 
   type GetDiseaseParamsSchema = ObjectSchemaToType<
@@ -168,7 +198,26 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     },
     async (req, res) => {
       try {
-        return res.code(200).send();
+        return await db.disease
+          .findFirst({
+            where: {
+              id: req.params.id,
+            },
+          })
+          .then((d) => {
+            if (!d) {
+              return res.code(404).send();
+            }
+
+            return res.code(200).send({
+              disease_name: d.diseaseName,
+              disease_description: d.diseaseDescription,
+              first_aid_description: d.firstAidDescription,
+            });
+          })
+          .catch(() => {
+            return res.code(500).send();
+          });
       } catch (e) {
         return res.code(500).send();
       }
@@ -179,14 +228,22 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
    * For updating disease data
    */
   const updateDiseaseParamsSchema = Type.Object({
-    id: Type.String({ description: 'Disease Id' }),
+    id: Type.Number({ description: 'Disease Id' }),
   });
 
   type UpdateDiseaseParamsSchema = ObjectSchemaToType<
     typeof updateDiseaseParamsSchema
   >;
 
-  const updateDiseaseBodySchema = Type.Object({});
+  const updateDiseaseBodySchema = Type.Object({
+    disease_name: Type.String({ description: 'The disease name' }),
+    disease_description: Type.String({
+      description: 'Disease description',
+    }),
+    first_aid_description: Type.String({
+      description: 'First aid description',
+    }),
+  });
 
   type UpdateDiseaseBodySchema = ObjectSchemaToType<
     typeof updateDiseaseBodySchema
@@ -218,9 +275,36 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     },
     async (req, res) => {
       try {
-        // TODO: implement
+        // check if exists
+        await db.disease
+          .findFirst({ where: { id: req.params.id } })
+          .then((d) => {
+            if (!d) {
+              return res.code(404).send();
+            }
+          })
+          .catch(() => {
+            return res.code(500).send();
+          });
 
-        return res.code(200).send();
+        return await db.disease
+          .update({
+            where: {
+              id: req.params.id,
+            },
+            data: {
+              id: req.params.id,
+              diseaseName: req.body.disease_name,
+              diseaseDescription: req.body.disease_description,
+              firstAidDescription: req.body.first_aid_description,
+            },
+          })
+          .then((v) => {
+            return res.code(204).send();
+          })
+          .catch(() => {
+            return res.code(500).send();
+          });
       } catch (e) {
         return res.code(500).send();
       }
@@ -231,7 +315,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
    * For deleting disease
    */
   const deleteDiseaseParamsSchema = Type.Object({
-    id: Type.String({ description: 'Disease Id meant to be deleted' }),
+    id: Type.Number({ description: 'Disease Id meant to be deleted' }),
   });
 
   type DeleteDiseaseParamsSchema = ObjectSchemaToType<
@@ -261,9 +345,34 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     },
     async (req, res) => {
       try {
-        // TODO: implement
+        // check if exists
+        await db.disease
+          .findFirst({
+            where: {
+              id: req.params.id,
+            },
+          })
+          .then((d) => {
+            if (!d) {
+              return res.code(404).send();
+            }
+          })
+          .catch(() => {
+            return res.code(500).send();
+          });
 
-        return res.code(200).send();
+        return await db.disease
+          .delete({
+            where: {
+              id: req.params.id,
+            },
+          })
+          .then(() => {
+            return res.code(204).send();
+          })
+          .catch(() => {
+            return res.code(500).send();
+          });
       } catch (e) {
         return res.code(500).send();
       }
