@@ -58,7 +58,7 @@ class DB {
 
       return this.client;
     } catch (e) {
-      throw new Error(`Error on connecting to database ${e}`);
+      console.error(`Error connecting to database : ${e}`);
     }
   }
 
