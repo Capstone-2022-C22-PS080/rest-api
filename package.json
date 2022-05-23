@@ -21,7 +21,8 @@
     "@prisma/client": "^3.14.0",
     "@sinclair/typebox": "^0.23.5",
     "fastify": "^3.29.0",
-    "fastify-file-upload": "^4.0.0"
+    "fastify-file-upload": "^4.0.0",
+    "pino-pretty": "^7.6.1"
   },
   "devDependencies": {
     "@swc/core": "^1.2.185",

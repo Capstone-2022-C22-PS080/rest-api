@@ -5,7 +5,11 @@ import constants from './common/constants';
 import diseasesRoutes from './routes/diseases';
 import swaggerConfig from './utils/swaggerConfig';
 
-const app = fastify({ logger: true });
+const app = fastify({
+  logger: {
+    prettyPrint: true,
+  },
+});
 
 /**
  * register plugins
