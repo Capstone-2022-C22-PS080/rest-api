@@ -4,3 +4,8 @@ automatic_scaling:
   target_cpu_utilization: 0.80
   min_instances: 1
   max_instances: 3
+
+env_variables:
+  DATABASE_USER: 'disease_db_user'
+  DATABASE_PASSWORD: 'disease_db_password'
+  DATABASE_ADDRESS: 'disease_db_address'

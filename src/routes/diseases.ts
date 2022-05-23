@@ -51,7 +51,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
       try {
         // TODO: implement
 
-        return await db.disease
+        return await db.op.disease
           .create({
             data: {
               diseaseName: req.body.disease_name,
@@ -123,7 +123,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
       try {
         // TODO: implement
 
-        return await db.disease
+        return await db.op.disease
           .findMany({
             where: {
               diseaseName: {
@@ -198,7 +198,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     },
     async (req, res) => {
       try {
-        return await db.disease
+        return await db.op.disease
           .findFirst({
             where: {
               id: req.params.id,
@@ -276,7 +276,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     async (req, res) => {
       try {
         // check if exists
-        await db.disease
+        await db.op.disease
           .findFirst({ where: { id: req.params.id } })
           .then((d) => {
             if (!d) {
@@ -287,7 +287,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
             return res.code(500).send();
           });
 
-        return await db.disease
+        return await db.op.disease
           .update({
             where: {
               id: req.params.id,
@@ -346,7 +346,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     async (req, res) => {
       try {
         // check if exists
-        await db.disease
+        await db.op.disease
           .findFirst({
             where: {
               id: req.params.id,
@@ -361,7 +361,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
             return res.code(500).send();
           });
 
-        return await db.disease
+        return await db.op.disease
           .delete({
             where: {
               id: req.params.id,
