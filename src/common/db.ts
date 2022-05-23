@@ -14,7 +14,7 @@ class DB {
     try {
       // in development
       if (!constants.IS_PROD || this.client) {
-        console.log(`Already connected`);
+        console.info(`Already connected`);
       }
 
       // in production
@@ -23,13 +23,19 @@ class DB {
           constants.DATABASE_USER!
         );
 
+        console.info(`db user: ${dbUser}`);
+
         const dbPassword = await secretManager.getSecretValue(
           constants.DATABASE_PASSWORD!
         );
 
+        console.info(`db password: ${dbPassword}`);
+
         const dbAddress = await secretManager.getSecretValue(
           constants.DATABASE_ADDRESS!
         );
+
+        console.info(`db address: ${dbAddress}`);
 
         const url = this.buildConnectionString(
           dbUser!,
@@ -52,7 +58,7 @@ class DB {
 
       return this.client;
     } catch (e) {
-      throw new Error('Error on connecting to database');
+      throw new Error(`Error on connecting to database ${e}`);
     }
   }
 
