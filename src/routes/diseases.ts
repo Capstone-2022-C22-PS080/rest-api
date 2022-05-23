@@ -140,11 +140,13 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
               }))
             );
           })
-          .catch(() => {
+          .catch((e) => {
             res.code(500).send();
+            console.error(e);
           });
       } catch (e) {
         res.code(500).send();
+        console.error(e);
       }
     }
   );
