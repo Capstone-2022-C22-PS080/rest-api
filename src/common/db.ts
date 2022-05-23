@@ -54,7 +54,10 @@ class DB {
         console.log(`Connected !`);
       }
 
-      assert(this.client instanceof PrismaClient);
+      assert(
+        this.client instanceof PrismaClient,
+        'DB.connect: It seems database client has not instantiated'
+      );
 
       return this.client;
     } catch (e) {
@@ -72,7 +75,10 @@ class DB {
   }
 
   get op() {
-    assert(this.client instanceof PrismaClient);
+    assert(
+      this.client instanceof PrismaClient,
+      'DB.op: It seems database client has not instantiated'
+    );
 
     return this.client;
   }

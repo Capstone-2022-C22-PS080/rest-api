@@ -1,6 +1,7 @@
 import fastifyCors from '@fastify/cors';
 import fastifySwagger from '@fastify/swagger';
 import { fastify } from 'fastify';
+import constants from './common/constants';
 import db from './common/db';
 import diseasesRoutes from './routes/diseases';
 import swaggerConfig from './utils/swaggerConfig';
@@ -26,6 +27,10 @@ app.register(diseasesRoutes, { prefix: '/diseases' });
      */
     app.listen(port, (_err, addr) => {
       console.log(`server running in ${addr}`);
+
+      if (constants.IS_PROD) {
+        console.log(JSON.stringify(constants));
+      }
     });
   });
 })();
