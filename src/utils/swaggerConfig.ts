@@ -1,7 +1,7 @@
 import { SwaggerOptions } from '@fastify/swagger';
 
 const swaggerConfig: SwaggerOptions = {
-  routePrefix: '/docs',
+  routePrefix: '/',
   swagger: {
     info: {
       title: 'REST API SSkin',
