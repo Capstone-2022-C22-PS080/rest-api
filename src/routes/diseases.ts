@@ -123,7 +123,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
       try {
         // TODO: implement
 
-        await db.op.disease
+        return await db.op.disease
           .findMany({
             where: {
               diseaseName: {
@@ -132,7 +132,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
             },
           })
           .then((vals) => {
-            res.code(200).send(
+            return res.code(200).send(
               vals.map((v) => ({
                 disease_name: v.diseaseName,
                 disease_description: v.diseaseDescription,
@@ -141,12 +141,12 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
             );
           })
           .catch((e) => {
-            res.code(500).send();
             console.error(e);
+            return res.code(500).send();
           });
       } catch (e) {
-        res.code(500).send();
         console.error(e);
+        return res.code(500).send();
       }
     }
   );
