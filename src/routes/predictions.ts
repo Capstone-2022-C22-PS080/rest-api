@@ -5,6 +5,7 @@ import got from 'got';
 import constants from '../common/constants';
 import { DefaultResponse400Schema } from '../common/schema';
 import { createResponseSchema } from '../common/schemaUtils';
+import secretManager from '../common/secretManager';
 import { ObjectSchemaToType, ResponseSchema } from '../common/types';
 
 const predictionRoutes: FastifyPluginAsync = async (app, _) => {
@@ -58,9 +59,30 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
         return res.code(500).send();
       }
 
-      const token = await auth.getAccessToken();
+      let token: string | undefined | null;
+      let aiEndpointId: string | undefined;
 
-      const url = `https://asia-southeast1-aiplatform.googleapis.com/v1/projects/${constants.GOOGLE_CLOUD_PROJECT}/locations/asia-southeast1/endpoints/${constants.AI_ENDPOINT_ID}:predict`;
+      try {
+        token = await auth.getAccessToken();
+        console.log(`token: ${token}`);
+      } catch (e) {
+        return res
+          .code(500)
+          .send({ message: `Error when create token: ${e}` } as any);
+      }
+
+      try {
+        aiEndpointId = await secretManager.getSecretValue(
+          constants.AI_ENDPOINT_ID!
+        );
+        console.log(`aiEndpointId: ${aiEndpointId}`);
+      } catch (e) {
+        return res
+          .code(500)
+          .send({ message: `Error when fetching endpoint id: ${e}` } as any);
+      }
+
+      const url = `https://asia-southeast1-aiplatform.googleapis.com/v1/projects/${constants.GOOGLE_CLOUD_PROJECT}/locations/asia-southeast1/endpoints/${aiEndpointId}:predict`;
 
       got
         .post(url, {
