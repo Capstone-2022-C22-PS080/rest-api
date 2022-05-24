@@ -238,13 +238,21 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   >;
 
   const updateDiseaseBodySchema = Type.Object({
-    disease_name: Type.String({ description: 'The disease name' }),
-    disease_description: Type.String({
-      description: 'Disease description',
-    }),
-    first_aid_description: Type.String({
-      description: 'First aid description',
-    }),
+    disease_name: Type.Optional(
+      Type.String({
+        description: 'The disease name',
+      })
+    ),
+    disease_description: Type.Optional(
+      Type.String({
+        description: 'Disease description',
+      })
+    ),
+    first_aid_description: Type.Optional(
+      Type.String({
+        description: 'First aid description',
+      })
+    ),
   });
 
   type UpdateDiseaseBodySchema = ObjectSchemaToType<
