@@ -80,6 +80,9 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
     '',
     {
       schema: {
+        description:
+          'Get prediction from Vertex AI endpoint (Cannot be used in development environment)',
+        tags: ['Prediction'],
         body: getDetectionBodySchema,
         response: getDetectionResponseSchemas,
         consumes: ['application/json'],

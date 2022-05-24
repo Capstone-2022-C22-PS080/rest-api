@@ -42,6 +42,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     '',
     {
       schema: {
+        tags: ['Disease'],
         description: 'Create a disease data',
         body: createDiseaseBodySchema,
         response: createDiseaseResponseSchemas,
@@ -115,6 +116,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     '',
     {
       schema: {
+        tags: ['Disease'],
         description: 'Get diseases data',
         querystring: getDiseasesQuerySchema,
         response: getDiseasesResponseSchemas,
@@ -197,6 +199,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     {
       schema: {
         description: 'Get disease by id',
+        tags: ['Disease'],
         params: getDiseaseParamsSchema,
         response: getDiseaseResponseSchemas,
       },
@@ -282,6 +285,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     {
       schema: {
         description: 'Update disease data',
+        tags: ['Disease'],
         params: updateDiseaseParamsSchema,
         body: updateDiseaseBodySchema,
         response: updateDiseaseResponseSchemas,
@@ -353,6 +357,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     {
       schema: {
         description: 'Delete disease data by Id',
+        tags: ['Disease'],
         params: deleteDiseaseParamsSchema,
         response: deleteDiseaseResponseSchemas,
       },
