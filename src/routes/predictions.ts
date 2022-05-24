@@ -92,7 +92,11 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
        */
       if (!constants.IS_PROD) {
         console.log('Currently not implemented in dev environment');
-        return res.code(500).send();
+        return res.code(500).send({
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: 'Currently not implemented in dev environment',
+        });
       }
 
       let token: string | undefined | null;
@@ -105,10 +109,15 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
       try {
         token = await auth.getAccessToken();
         console.log(`token: ${token}`);
-      } catch (e) {
-        return res
-          .code(500)
-          .send({ message: `Error when create token: ${e}` } as any);
+      } catch (err) {
+        const errMsg = `Error when get access token : ${err}`;
+        console.error(errMsg);
+
+        return res.code(500).send({
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: errMsg,
+        });
       }
 
       /**
@@ -119,12 +128,15 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
           constants.AI_ENDPOINT_ID!
         );
         console.log(`aiEndpointId: ${aiEndpointId}`);
-      } catch (e) {
-        console.error(`Error after get endpoint id secret`);
+      } catch (err) {
+        const errMsg = `Error when get endpoint secret : ${err}`;
+        console.error(errMsg);
 
-        return res
-          .code(500)
-          .send({ message: `Error when fetching endpoint id: ${e}` } as any);
+        return res.code(500).send({
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: errMsg,
+        });
       }
 
       const url = `https://asia-southeast1-aiplatform.googleapis.com/v1/projects/${constants.GOOGLE_CLOUD_PROJECT}/locations/asia-southeast1/endpoints/${aiEndpointId}:predict`;
@@ -154,10 +166,15 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
             Authorization: `Bearer ${token}`,
           },
         });
-      } catch (e) {
+      } catch (err) {
+        const errMsg = `Error when get prediction : ${err}`;
+        console.error(errMsg);
+
         return res.code(500).send({
-          message: `Error when make request to vertex AI: ${e}`,
-        } as any);
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: errMsg,
+        });
       }
 
       const predictionIndex = axiosRes.data.predictions[0].indexOf(1);
@@ -165,9 +182,7 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
       if (predictionIndex === -1) {
         console.log(`Prediction got no matches`);
 
-        return res
-          .code(404)
-          .send({ message: 'Prediction got no matches' } as any);
+        return res.callNotFound();
       }
 
       const diseaseName = diseaseClassNames[predictionIndex];
@@ -179,16 +194,14 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
       return await db.op.disease
         .findFirst({
           where: {
-            diseaseName: {
-              search: diseaseName,
-            },
+            diseaseName,
           },
         })
         .then((disease) => {
           if (!disease) {
             console.log('Disease Not Found');
 
-            return res.code(404).send();
+            return res.callNotFound();
           }
 
           return res.code(200).send({
@@ -198,10 +211,14 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
           });
         })
         .catch((err) => {
-          console.error(err);
+          const errMsg = `Error when get disease data : ${err}`;
+          console.error(errMsg);
+
           return res.code(500).send({
-            message: `Error when getting disease data : ${err}`,
-          } as any);
+            statusCode: 500,
+            error: 'Internal Server Error',
+            message: errMsg,
+          });
         });
     }
   );
