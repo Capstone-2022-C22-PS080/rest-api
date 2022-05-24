@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox';
+import axios from 'axios';
 import { FastifyPluginAsync } from 'fastify';
 import { auth } from 'google-auth-library';
-import got from 'got';
 import constants from '../common/constants';
 import { DefaultResponse400Schema } from '../common/schema';
 import { createResponseSchema } from '../common/schemaUtils';
@@ -83,27 +83,28 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
       }
 
       const url = `https://asia-southeast1-aiplatform.googleapis.com/v1/projects/${constants.GOOGLE_CLOUD_PROJECT}/locations/asia-southeast1/endpoints/${aiEndpointId}:predict`;
+      const data = {
+        instances: [
+          {
+            b64: req.body.base64,
+          },
+        ],
+      };
 
-      got
-        .post(url, {
+      return await axios
+        .post(url, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          json: {
-            instances: [
-              {
-                b64: req.body.base64,
-              },
-            ],
-          },
         })
-        .then((res1) => {
-          res.code(200).send(res1.body as any);
-          console.log(res1.statusCode);
+        .then((r) => {
+          res.code(200).send(r.data);
         })
         .catch((err) => {
-          console.log(err);
-          res.code(500).send();
+          console.error(err);
+          res.code(500).send({
+            msg: `${err}`,
+          } as any);
         });
     }
   );
