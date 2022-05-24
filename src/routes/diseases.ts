@@ -210,7 +210,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
           })
           .then((d) => {
             if (!d) {
-              return res.code(404).send();
+              return res.callNotFound();
             }
 
             return res.code(200).send({
@@ -286,13 +286,16 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
           .findFirst({ where: { id: req.params.id } })
           .then((d) => {
             if (!d) {
-              return res.code(404).send();
+              return res.callNotFound();
             }
           })
           .catch(() => {
             return res.code(500).send();
           });
 
+        /**
+         * update if exists
+         */
         return await db.op.disease
           .update({
             where: {
@@ -357,7 +360,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
           })
           .then((d) => {
             if (!d) {
-              return res.code(404).send();
+              return res.callNotFound();
             }
           })
           .catch(() => {
