@@ -4,6 +4,8 @@ const constants = {
   DATABASE_USER: process.env.DATABASE_USER,
   DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
   DATABASE_ADDRESS: process.env.DATABASE_ADDRESS,
+  AI_ENDPOINT_LOCATION: process.env.AI_ENDPOINT_LOCATION,
+  AI_ENDPOINT_ID: process.env.AI_ENDPOINT_ID,
   PORT: process.env.PORT || 8080,
 };
 

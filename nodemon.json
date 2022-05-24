@@ -1,5 +1,5 @@
 {
-  "exec": "ts-node --swc src/index.ts",
+  "exec": "cross-env ts-node --swc src/index.ts",
   "watch": ["src"],
   "ext": "*",
   "legacyWatch": true,

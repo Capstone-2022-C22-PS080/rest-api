@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import { FastifyPluginAsync } from 'fastify';
-import constants from '../common/constants';
+import predictionServiceClient from '../common/predictionServiceClient';
 import { DefaultResponse400Schema } from '../common/schema';
 import { createResponseSchema } from '../common/schemaUtils';
 import { ObjectSchemaToType, ResponseSchema } from '../common/types';
@@ -51,10 +51,18 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
       },
     },
     async (req, res) => {
-      if (!constants.IS_PROD) {
-        console.log('Not implemented in dev environment');
-        return res.code(500).send();
-      }
+      // if (!constants.IS_PROD) {
+      //   console.log('Not implemented in dev environment');
+      //   return res.code(500).send();
+      // }
+
+      await predictionServiceClient
+        .predictImageClassification(req.body.base64)
+        .then((v) => {
+          res.send({
+            v,
+          } as any);
+        });
     }
   );
 };

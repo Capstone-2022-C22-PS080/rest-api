@@ -8,6 +8,8 @@ declare namespace NodeJS {
     DATABASE_USER?: string;
     DATABASE_PASSWORD?: string;
     DATABASE_ADDRESS?: string;
+    AI_ENDPOINT_LOCATION?: string;
+    AI_ENDPOINT_ID?: string;
 
     /**
      * set after deployed to app engine
