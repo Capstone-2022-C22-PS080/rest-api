@@ -43,13 +43,13 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
 
   app.post<{
     Body: GetDetectionBodySchema;
-    Reply: GetDetectionResponseSchemas;
+    // Reply: GetDetectionResponseSchemas;
   }>(
     '',
     {
       schema: {
         body: getDetectionBodySchema,
-        response: getDetectionResponseSchemas,
+        // response: getDetectionResponseSchemas,
         consumes: ['application/json'],
       },
     },
