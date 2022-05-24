@@ -120,6 +120,8 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
         );
         console.log(`aiEndpointId: ${aiEndpointId}`);
       } catch (e) {
+        console.error(`Error after get endpoint id secret`);
+
         return res
           .code(500)
           .send({ message: `Error when fetching endpoint id: ${e}` } as any);
@@ -153,7 +155,9 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
           },
         });
       } catch (e) {
-        return res.code(500).send();
+        return res.code(500).send({
+          message: `Error when make request to vertex AI: ${e}`,
+        } as any);
       }
 
       const predictionIndex = axiosRes.data.predictions[0].indexOf(1);
@@ -161,7 +165,9 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
       if (predictionIndex === -1) {
         console.log(`Prediction got no matches`);
 
-        return res.code(404).send();
+        return res
+          .code(404)
+          .send({ message: 'Prediction got no matches' } as any);
       }
 
       const diseaseName = diseaseClassNames[predictionIndex];
@@ -193,7 +199,9 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
         })
         .catch((err) => {
           console.error(err);
-          return res.code(500).send();
+          return res.code(500).send({
+            message: `Error when getting disease data : ${err}`,
+          } as any);
         });
     }
   );
