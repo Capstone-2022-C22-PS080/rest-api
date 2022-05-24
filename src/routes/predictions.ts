@@ -1,6 +1,8 @@
 import { Type } from '@sinclair/typebox';
 import { FastifyPluginAsync } from 'fastify';
-import predictionServiceClient from '../common/predictionServiceClient';
+import { auth } from 'google-auth-library';
+import got from 'got';
+import constants from '../common/constants';
 import { DefaultResponse400Schema } from '../common/schema';
 import { createResponseSchema } from '../common/schemaUtils';
 import { ObjectSchemaToType, ResponseSchema } from '../common/types';
@@ -51,17 +53,35 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
       },
     },
     async (req, res) => {
-      // if (!constants.IS_PROD) {
-      //   console.log('Not implemented in dev environment');
-      //   return res.code(500).send();
-      // }
+      if (!constants.IS_PROD) {
+        console.log('Not implemented in dev environment');
+        return res.code(500).send();
+      }
 
-      await predictionServiceClient
-        .predictImageClassification(req.body.base64)
-        .then((v) => {
-          res.send({
-            v,
-          } as any);
+      const token = await auth.getAccessToken();
+
+      const url = `https://asia-southeast1-aiplatform.googleapis.com/v1/projects/${constants.GOOGLE_CLOUD_PROJECT}/locations/asia-southeast1/endpoints/${constants.AI_ENDPOINT_ID}:predict`;
+
+      got
+        .post(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          json: {
+            instances: [
+              {
+                b64: req.body.base64,
+              },
+            ],
+          },
+        })
+        .then((res1) => {
+          res.code(200).send(res1.body as any);
+          console.log(res1.statusCode);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.code(500).send();
         });
     }
   );
