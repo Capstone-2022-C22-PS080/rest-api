@@ -1,4 +1,5 @@
 import { TSchema, Type } from '@sinclair/typebox';
+import { FastifySchema } from 'fastify';
 
 export type ResponseCode = 200 | 204 | 400 | 404 | 500;
 
@@ -25,3 +26,5 @@ export const createResponseSchema = <
     ...responseSchema,
   };
 };
+
+export const createSchema = (schema: FastifySchema) => schema;
