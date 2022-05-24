@@ -87,6 +87,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
     200: Type.Array(
       Type.Object(
         {
+          id: Type.Number({ description: 'Disease Id' }),
           disease_name: Type.String({ description: 'The disease name' }),
           disease_description: Type.String({
             description: 'Disease description',
@@ -134,6 +135,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
           .then((vals) => {
             return res.code(200).send(
               vals.map((v) => ({
+                id: v.id,
                 disease_name: v.diseaseName,
                 disease_description: v.diseaseDescription,
                 first_aid_description: v.firstAidDescription,
@@ -166,6 +168,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   const getDiseaseResponseSchemas = createResponseSchema({
     200: Type.Object(
       {
+        id: Type.Number({ description: 'Disease Id' }),
         disease_name: Type.String({ description: 'The disease name' }),
         disease_description: Type.String({
           description: 'Disease description',
@@ -212,6 +215,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
             }
 
             return res.code(200).send({
+              id: d.id,
               disease_name: d.diseaseName,
               disease_description: d.diseaseDescription,
               first_aid_description: d.firstAidDescription,
