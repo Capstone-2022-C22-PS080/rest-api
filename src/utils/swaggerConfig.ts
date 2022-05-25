@@ -15,13 +15,18 @@ const swaggerConfig: SwaggerOptions = {
     schemes: ['http'],
     consumes: ['application/json'],
     produces: ['application/json'],
-  },
-  openapi: {
-    info: {
-      title: 'REST API SSkin',
-      description: 'REST API untuk aplikasi SSkin',
-      version: '0.0.1',
+    securityDefinitions: {
+      Authorization: {
+        type: 'apiKey',
+        in: 'header',
+        name: 'Authorization',
+      },
     },
+    security: [
+      {
+        Authorization: [],
+      },
+    ],
   },
   uiConfig: {
     docExpansion: 'list',

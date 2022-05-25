@@ -2,6 +2,7 @@ import { Type } from '@sinclair/typebox';
 import { FastifyPluginAsync, FastifySchema } from 'fastify';
 import db from '../common/db';
 import {
+  defaultHeaderSchema,
   DefaultResponse204Schema,
   DefaultResponse400Schema,
   DefaultResponse404Schema,
@@ -17,6 +18,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   /**
    * create a disease
    */
+
   const createDiseaseBodySchema = Type.Object({
     disease_name: Type.String({ description: 'The disease name' }),
     disease_description: Type.String({ description: 'Disease description' }),
@@ -34,11 +36,13 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   const createDiseaseSchema: FastifySchema = {
     tags: ['Disease'],
     description: 'Create a disease data',
+    headers: defaultHeaderSchema,
     body: createDiseaseBodySchema,
     response: createDiseaseResponseSchemas,
   };
 
   type CreateDiseaseSchema = HandlerGeneric<{
+    Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
     Body: ObjectSchemaToType<typeof createDiseaseBodySchema>;
     Reply: ResponseSchema<typeof createDiseaseResponseSchemas>;
   }>;
@@ -108,6 +112,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   const getDiseasesSchema = createSchema({
     tags: ['Disease'],
     description: 'Get diseases data',
+    headers: defaultHeaderSchema,
     querystring: getDiseasesQuerySchema,
     response: getDiseasesResponseSchemas,
   });
@@ -115,6 +120,7 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   type GetDiseasesSchema = HandlerGeneric<{
     Querystring: ObjectSchemaToType<typeof getDiseasesQuerySchema>;
     Reply: ResponseSchema<typeof getDiseasesResponseSchemas>;
+    Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
   }>;
 
   app.get<GetDiseasesSchema>(
@@ -186,11 +192,13 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   const getDiseaseSchema = createSchema({
     description: 'Get disease by id',
     tags: ['Disease'],
+    headers: defaultHeaderSchema,
     params: getDiseaseParamsSchema,
     response: getDiseaseResponseSchemas,
   });
 
   type GetDiseaseSchema = HandlerGeneric<{
+    Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
     Params: ObjectSchemaToType<typeof getDiseaseParamsSchema>;
     Reply: ResponseSchema<typeof getDiseaseResponseSchemas>;
   }>;
@@ -263,12 +271,14 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   const updateDiseaseSchema = createSchema({
     description: 'Update disease data',
     tags: ['Disease'],
+    headers: defaultHeaderSchema,
     params: updateDiseaseParamsSchema,
     body: updateDiseaseBodySchema,
     response: updateDiseaseResponseSchemas,
   });
 
   type UpdateDiseaseSchema = HandlerGeneric<{
+    Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
     Params: ObjectSchemaToType<typeof updateDiseaseParamsSchema>;
     Body: ObjectSchemaToType<typeof updateDiseaseBodySchema>;
     Reply: ResponseSchema<typeof updateDiseaseResponseSchemas>;
@@ -335,11 +345,13 @@ const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   const deleteDiseaseSchema = createSchema({
     description: 'Delete disease data by Id',
     tags: ['Disease'],
+    headers: defaultHeaderSchema,
     params: deleteDiseaseParamsSchema,
     response: deleteDiseaseResponseSchemas,
   });
 
   type DeleteDiseaseSchema = HandlerGeneric<{
+    Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
     Params: ObjectSchemaToType<typeof deleteDiseaseParamsSchema>;
     Reply: ResponseSchema<typeof deleteDiseaseResponseSchemas>;
   }>;

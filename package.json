@@ -24,6 +24,7 @@
     "env-cmd": "^10.1.0",
     "fastify": "^3.29.0",
     "fastify-plugin": "^3.0.1",
+    "firebase-admin": "^10.2.0",
     "google-auth-library": "^8.0.2",
     "pino-pretty": "^7.6.1"
   },

@@ -39,3 +39,9 @@ export const DefaultResponse415Schema = Type.Object(
     description: 'Bad Request',
   }
 );
+
+export const defaultHeaderSchema = Type.Object({
+  Authorization: Type.String({
+    description: 'Bearer jwt token',
+  }),
+});

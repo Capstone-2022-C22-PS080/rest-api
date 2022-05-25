@@ -1,5 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import { FastifyPluginAsync } from 'fastify';
+import authAdmin from '../common/authAdmin';
 import { createResponseSchema, createSchema } from '../common/schemaUtils';
 import {
   HandlerGeneric,
@@ -49,8 +50,28 @@ const tokenRoutes: FastifyPluginAsync = async (app, _opt) => {
     {
       schema: createTokenSchema,
     },
-    async (req, res) => {
-      res.code(200).send({ jwtToken: 'klkanfmkemrelka' });
+    async function (req, res) {
+      const { uid } = req.body;
+
+      try {
+        const user = await authAdmin.getUser(uid);
+      } catch (err) {
+        this;
+        return res.code(500).send({
+          error: 'Internal Server Error',
+          message: 'Error when creating token',
+          statusCode: 500,
+        });
+      }
+
+      const jwtToken = await res.jwtSign({
+        uid,
+        iat: Date.now(),
+      });
+
+      return res.code(200).send({
+        jwtToken,
+      });
     }
   );
 };

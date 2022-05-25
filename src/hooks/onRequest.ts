@@ -4,9 +4,10 @@ const onRequest: onRequestHookHandler = async (req, res) => {
   const publiclyAuthorizedPath = ['/token', '/static', '/json'];
 
   if (
-    req.routerPath.includes('tokens') ||
-    req.routerPath.includes('static') ||
-    req.routerPath.includes('json')
+    req.routerPath.includes('/tokens') ||
+    req.routerPath.includes('/static') ||
+    req.routerPath.includes('/json') ||
+    req.routerPath.includes('/')
   ) {
     return;
   }
