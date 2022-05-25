@@ -11,3 +11,4 @@ env_variables:
   DATABASE_ADDRESS: 'disease_db_address'
   AI_ENDPOINT_LOCATION: 'ai_endpoint_location'
   AI_ENDPOINT_ID: 'ai_endpoint_id'
+  JWT_SECRET: 'gae_jwt_secret'

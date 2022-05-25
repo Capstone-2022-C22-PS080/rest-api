@@ -1,9 +1,12 @@
 import fastifyCors from '@fastify/cors';
+import fastifyJwt from '@fastify/jwt';
 import fastifySwagger from '@fastify/swagger';
 import { fastify } from 'fastify';
-import constants from './common/constants';
+import onReady from './hooks/onReady';
+import onRequest from './hooks/onRequest';
 import diseasesRoutes from './routes/diseases';
 import predictionRoutes from './routes/predictions';
+import jwtConfig from './utils/jwtConfig';
 import swaggerConfig from './utils/swaggerConfig';
 
 const app = fastify({
@@ -17,6 +20,7 @@ const app = fastify({
  */
 app.register(fastifyCors);
 app.register(fastifySwagger, swaggerConfig);
+app.register(fastifyJwt, jwtConfig);
 
 /**
  * register routes
@@ -25,12 +29,9 @@ app.register(diseasesRoutes, { prefix: '/diseases' });
 app.register(predictionRoutes, { prefix: '/predictions' });
 
 /**
- * On server ready, it should start to listen
+ * register hooks
  */
-app.addHook('onReady', () => {
-  app.listen(constants.PORT, (_err, addr) => {
-    console.log(`Server running in ${addr}`);
-  });
-});
+app.addHook('onRequest', onRequest);
+app.addHook('onReady', onReady);
 
 export default app;

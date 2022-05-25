@@ -10,6 +10,7 @@ declare namespace NodeJS {
     DATABASE_ADDRESS?: string;
     AI_ENDPOINT_LOCATION?: string;
     AI_ENDPOINT_ID?: string;
+    JWT_SECRET?: string;
 
     /**
      * set after deployed to app engine

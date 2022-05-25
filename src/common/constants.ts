@@ -6,6 +6,7 @@ const constants = {
   DATABASE_ADDRESS: process.env.DATABASE_ADDRESS,
   AI_ENDPOINT_LOCATION: process.env.AI_ENDPOINT_LOCATION,
   AI_ENDPOINT_ID: process.env.AI_ENDPOINT_ID,
+  JWT_SECRET: process.env.JWT_SECRET,
   PORT: process.env.PORT || 8080,
 };
 
