@@ -6,6 +6,7 @@ import onReady from './hooks/onReady';
 import onRequest from './hooks/onRequest';
 import diseasesRoutes from './routes/diseases';
 import predictionRoutes from './routes/predictions';
+import tokenRoutes from './routes/tokens';
 import jwtConfig from './utils/jwtConfig';
 import swaggerConfig from './utils/swaggerConfig';
 
@@ -25,6 +26,7 @@ app.register(fastifyJwt, jwtConfig);
 /**
  * register routes
  */
+app.register(tokenRoutes, { prefix: '/tokens' });
 app.register(diseasesRoutes, { prefix: '/diseases' });
 app.register(predictionRoutes, { prefix: '/predictions' });
 
