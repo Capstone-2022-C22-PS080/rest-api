@@ -1,7 +1,8 @@
-import { auth, initializeApp } from 'firebase-admin';
+import { initializeApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
 
 initializeApp();
 
-const authAdmin = auth();
+const authAdmin = getAuth();
 
 export default authAdmin;
