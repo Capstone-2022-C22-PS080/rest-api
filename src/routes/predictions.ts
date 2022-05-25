@@ -1,16 +1,16 @@
 import { Type } from '@sinclair/typebox';
-import axios, { AxiosResponse } from 'axios';
 import { FastifyPluginAsync } from 'fastify';
-import { auth } from 'google-auth-library';
-import constants from '../common/constants';
-import db from '../common/db';
 import {
+  defaultHeaderSchema,
   DefaultResponse400Schema,
   DefaultResponse404Schema,
 } from '../common/schema';
-import { createResponseSchema } from '../common/schemaUtils';
-import secretManager from '../common/secretManager';
-import { ObjectSchemaToType, ResponseSchema } from '../common/types';
+import { createResponseSchema, createSchema } from '../common/schemaUtils';
+import {
+  HandlerGeneric,
+  ObjectSchemaToType,
+  ResponseSchema,
+} from '../common/types';
 
 const diseaseClassNames = [
   'Acne and Rosacea Photos',
@@ -48,10 +48,6 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
     ),
   });
 
-  type GetDetectionBodySchema = ObjectSchemaToType<
-    typeof getDetectionBodySchema
-  >;
-
   const getDetectionResponseSchemas = createResponseSchema({
     200: Type.Object({
       disease_name: Type.String({
@@ -69,160 +65,35 @@ const predictionRoutes: FastifyPluginAsync = async (app, _) => {
     404: DefaultResponse404Schema,
   });
 
-  type GetDetectionResponseSchemas = ResponseSchema<
-    typeof getDetectionResponseSchemas
-  >;
+  const getDetectionSchema = createSchema({
+    description:
+      'Get prediction from Vertex AI endpoint (Cannot be used in development environment)',
+    tags: ['Prediction'],
+    headers: defaultHeaderSchema,
+    body: getDetectionBodySchema,
+    response: getDetectionResponseSchemas,
+  });
 
-  app.post<{
-    Body: GetDetectionBodySchema;
-    Reply: GetDetectionResponseSchemas;
-  }>(
+  type GetDetectionSchema = HandlerGeneric<{
+    Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
+    Body: ObjectSchemaToType<typeof getDetectionBodySchema>;
+    Reply: ResponseSchema<typeof getDetectionResponseSchemas>;
+  }>;
+
+  app.post<GetDetectionSchema>(
     '',
     {
-      schema: {
-        description:
-          'Get prediction from Vertex AI endpoint (Cannot be used in development environment)',
-        tags: ['Prediction'],
-        body: getDetectionBodySchema,
-        response: getDetectionResponseSchemas,
-        consumes: ['application/json'],
-        produces: ['application/json'],
-      },
+      schema: getDetectionSchema,
     },
     async (req, res) => {
       /**
-       * Skip if in development environment
+       * Currently skip all operation
        */
-      if (!constants.IS_PROD) {
-        console.log('Currently not implemented in dev environment');
-        return res.code(500).send({
-          statusCode: 500,
-          error: 'Internal Server Error',
-          message: 'Currently not implemented in dev environment',
-        });
-      }
-
-      let token: string | undefined | null;
-      let aiEndpointId: string | undefined;
-
-      /**
-       * get token for request to Vertex AI's prediction endpoint
-       * service account should have Vertex AI Service User permission
-       */
-      try {
-        token = await auth.getAccessToken();
-        console.log(`token: ${token}`);
-      } catch (err) {
-        const errMsg = `Error when get access token : ${err}`;
-        console.error(errMsg);
-
-        return res.code(500).send({
-          statusCode: 500,
-          error: 'Internal Server Error',
-          message: errMsg,
-        });
-      }
-
-      /**
-       * get endpoint secret
-       */
-      try {
-        aiEndpointId = await secretManager.getSecretValue(
-          constants.AI_ENDPOINT_ID!
-        );
-        console.log(`aiEndpointId: ${aiEndpointId}`);
-      } catch (err) {
-        const errMsg = `Error when get endpoint secret : ${err}`;
-        console.error(errMsg);
-
-        return res.code(500).send({
-          statusCode: 500,
-          error: 'Internal Server Error',
-          message: errMsg,
-        });
-      }
-
-      const url = `https://asia-southeast1-aiplatform.googleapis.com/v1/projects/${constants.GOOGLE_CLOUD_PROJECT}/locations/asia-southeast1/endpoints/${aiEndpointId}:predict`;
-      const data = {
-        instances: [
-          {
-            b64: req.body.base64,
-          },
-        ],
-      };
-
-      type AIResponse = {
-        predictions: number[][];
-        deployedModelId: string;
-        model: string;
-        modelDisplayName: string;
-      };
-
-      let axiosRes: AxiosResponse<AIResponse>;
-
-      /**
-       * make request to vertex AI
-       */
-      try {
-        axiosRes = await axios.post(url, data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      } catch (err) {
-        const errMsg = `Error when get prediction : ${err}`;
-        console.error(errMsg);
-
-        return res.code(500).send({
-          statusCode: 500,
-          error: 'Internal Server Error',
-          message: errMsg,
-        });
-      }
-
-      const predictionIndex = axiosRes.data.predictions[0].indexOf(1);
-
-      if (predictionIndex === -1) {
-        console.log(`Prediction got no matches`);
-
-        return res.callNotFound();
-      }
-
-      const diseaseName = diseaseClassNames[predictionIndex];
-      console.log(`Disease name => ${diseaseName}`);
-
-      /**
-       * get disease data from database
-       */
-      return await db.op.disease
-        .findFirst({
-          where: {
-            diseaseName,
-          },
-        })
-        .then((disease) => {
-          if (!disease) {
-            console.log('Disease Not Found');
-
-            return res.callNotFound();
-          }
-
-          return res.code(200).send({
-            disease_name: disease.diseaseName,
-            disease_description: disease.diseaseDescription,
-            first_aid_description: disease.firstAidDescription,
-          });
-        })
-        .catch((err) => {
-          const errMsg = `Error when get disease data : ${err}`;
-          console.error(errMsg);
-
-          return res.code(500).send({
-            statusCode: 500,
-            error: 'Internal Server Error',
-            message: errMsg,
-          });
-        });
+      return res.code(500).send({
+        statusCode: 500,
+        error: 'Internal Server Error',
+        message: 'Currently cannot be used',
+      });
     }
   );
 };
