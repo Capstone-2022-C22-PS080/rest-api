@@ -1,10 +1,11 @@
 import { onRequestHookHandler } from 'fastify';
 
 const onRequest: onRequestHookHandler = async (req, res) => {
-  const publiclyAuthorizedPath = ['/token', '/static', '/json'];
-
+  /**
+   * Skip auth check for these routes
+   */
   if (
-    req.routerPath.includes('/tokens') ||
+    req.routerPath.includes('/auth/token') ||
     req.routerPath.includes('/static') ||
     req.routerPath.includes('/json') ||
     req.routerPath.includes('/')
@@ -12,6 +13,9 @@ const onRequest: onRequestHookHandler = async (req, res) => {
     return;
   }
 
+  /**
+   * auth checks jwt by using Authorization header, with firebase uid as payload in jwt
+   */
   try {
     await req.jwtVerify();
   } catch (err) {

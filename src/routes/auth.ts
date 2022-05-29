@@ -8,7 +8,7 @@ import {
   ResponseSchema,
 } from '../common/types';
 
-const tokenRoutes: FastifyPluginAsync = async (app, _opt) => {
+const authRoutes: FastifyPluginAsync = async (app, _opt) => {
   const createTokenBodySchema = Type.Object(
     {
       uid: Type.String({
@@ -35,7 +35,7 @@ const tokenRoutes: FastifyPluginAsync = async (app, _opt) => {
 
   const createTokenSchema = createSchema({
     description: 'Get token for a firebase user',
-    tags: ['Token'],
+    tags: ['Auth'],
     body: createTokenBodySchema,
     response: createTokenResponseSchemas,
   });
@@ -46,7 +46,7 @@ const tokenRoutes: FastifyPluginAsync = async (app, _opt) => {
   }>;
 
   app.post<CreateTokenSchema>(
-    '',
+    '/token',
     {
       schema: createTokenSchema,
     },
@@ -76,4 +76,4 @@ const tokenRoutes: FastifyPluginAsync = async (app, _opt) => {
   );
 };
 
-export default tokenRoutes;
+export default authRoutes;
