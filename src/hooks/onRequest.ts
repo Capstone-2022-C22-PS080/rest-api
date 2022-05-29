@@ -1,6 +1,6 @@
 import { onRequestHookHandler } from 'fastify';
 
-const onRequest: onRequestHookHandler = async (req, res) => {
+export const onRequest: onRequestHookHandler = async (req, res) => {
   /**
    * Skip auth check for these routes
    */
@@ -22,5 +22,3 @@ const onRequest: onRequestHookHandler = async (req, res) => {
     res.send(err);
   }
 };
-
-export default onRequest;
