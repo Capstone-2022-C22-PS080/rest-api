@@ -4,14 +4,9 @@ import fastifySwagger from '@fastify/swagger';
 import { fastify } from 'fastify';
 import { onReady, onRequest } from './hooks';
 import { authRoutes, diseaseRoutes, predictionRoutes } from './routes';
-import jwtConfig from './utils/jwtConfig';
-import swaggerConfig from './utils/swaggerConfig';
+import { fastifyAppConfig, jwtConfig, swaggerConfig } from './utils';
 
-const app = fastify({
-  logger: {
-    prettyPrint: true,
-  },
-});
+const app = fastify(fastifyAppConfig);
 
 /**
  * register plugins
