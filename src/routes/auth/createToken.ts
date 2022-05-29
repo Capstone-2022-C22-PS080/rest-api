@@ -1,5 +1,4 @@
 import { Type } from '@sinclair/typebox';
-import authAdmin from '../../common/authAdmin';
 import { createResponseSchema, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
@@ -7,6 +6,7 @@ import {
   ObjectSchemaToType,
   ResponseSchema,
 } from '../../common/types';
+import firebaseAdminAuth from '../../services/firebaseAdminAuth';
 
 const createTokenBodySchema = Type.Object(
   {
@@ -49,7 +49,7 @@ export const createToken: CustomRouteHandler<CreateTokenSchema> =
     const { uid } = req.body;
 
     try {
-      const user = await authAdmin.getUser(uid);
+      const user = await firebaseAdminAuth.getUser(uid);
     } catch (err) {
       return res.code(500).send({
         error: 'Internal Server Error',

@@ -1,5 +1,4 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
-import constants from './constants';
 
 class SecretManager {
   private client: SecretManagerServiceClient;
@@ -9,8 +8,10 @@ class SecretManager {
   }
 
   async getSecretValue(secretName: string, version: string = 'latest') {
+    const projectId = await this.client.auth.getProjectId();
+
     const [vs] = await this.client.accessSecretVersion({
-      name: `projects/${constants.GOOGLE_CLOUD_PROJECT}/secrets/${secretName}/versions/${version}`,
+      name: `projects/${projectId}/secrets/${secretName}/versions/${version}`,
     });
 
     if (!vs.payload || !vs.payload.data) {
@@ -18,7 +19,7 @@ class SecretManager {
     }
 
     if (vs.payload && vs.payload.data) {
-      return vs.payload.data as string;
+      return vs.payload.data.toString();
     }
   }
 }

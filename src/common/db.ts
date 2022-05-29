@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import assert from 'assert';
+import secretManager from '../services/secretManager';
 import constants from './constants';
-import secretManager from './secretManager';
 
 class DB {
   private client?: PrismaClient;

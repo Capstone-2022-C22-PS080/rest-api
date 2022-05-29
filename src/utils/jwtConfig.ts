@@ -1,6 +1,6 @@
 import { FastifyJWTOptions } from '@fastify/jwt';
 import constants from '../common/constants';
-import secretManager from '../common/secretManager';
+import secretManager from '../services/secretManager';
 
 const jwtConfig: FastifyJWTOptions = {
   secret: async function () {
