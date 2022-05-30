@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox';
-import { createResponseSchema, createSchema } from '../../common/schemaUtils';
+import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -19,7 +19,7 @@ const createTokenBodySchema = Type.Object(
   }
 );
 
-const createTokenResponseSchemas = createResponseSchema({
+const createTokenResponseSchemas = createResponseSchemas({
   200: Type.Object(
     {
       jwtToken: Type.String({

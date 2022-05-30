@@ -4,7 +4,7 @@ import {
   defaultHeaderSchema,
   DefaultResponse404Schema,
 } from '../../common/schema';
-import { createResponseSchema, createSchema } from '../../common/schemaUtils';
+import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -16,7 +16,7 @@ const getDiseaseParamsSchema = Type.Object({
   id: Type.Number({ description: 'Disease Id' }),
 });
 
-const getDiseaseResponseSchemas = createResponseSchema({
+const getDiseaseResponseSchemas = createResponseSchemas({
   200: Type.Object(
     {
       id: Type.Number({ description: 'Disease Id' }),

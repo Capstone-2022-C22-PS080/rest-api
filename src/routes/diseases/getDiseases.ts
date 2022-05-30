@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox';
 import db from '../../common/db';
 import { defaultHeaderSchema } from '../../common/schema';
-import { createResponseSchema, createSchema } from '../../common/schemaUtils';
+import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -17,7 +17,7 @@ const getDiseasesQuerySchema = Type.Object({
   ),
 });
 
-const getDiseasesResponseSchemas = createResponseSchema({
+const getDiseasesResponseSchemas = createResponseSchemas({
   200: Type.Array(
     Type.Object(
       {

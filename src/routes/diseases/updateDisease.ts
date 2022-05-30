@@ -6,7 +6,7 @@ import {
   DefaultResponse400Schema,
   DefaultResponse404Schema,
 } from '../../common/schema';
-import { createResponseSchema, createSchema } from '../../common/schemaUtils';
+import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -36,7 +36,7 @@ const updateDiseaseBodySchema = Type.Object({
   ),
 });
 
-const updateDiseaseResponseSchemas = createResponseSchema({
+const updateDiseaseResponseSchemas = createResponseSchemas({
   204: DefaultResponse204Schema,
   404: DefaultResponse404Schema,
   400: DefaultResponse400Schema,

@@ -16,7 +16,7 @@ const defaultResponseSchemas = {
   ),
 };
 
-export const createResponseSchema = <
+export const createResponseSchemas = <
   T extends Partial<Record<ResponseCode, TSchema>>
 >(
   responseSchema: T

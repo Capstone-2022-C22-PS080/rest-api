@@ -2,7 +2,7 @@ import { Type } from '@sinclair/typebox';
 import { FastifySchema } from 'fastify';
 import db from '../../common/db';
 import { defaultHeaderSchema } from '../../common/schema';
-import { createResponseSchema } from '../../common/schemaUtils';
+import { createResponseSchemas } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -22,7 +22,7 @@ const createDiseaseBodySchema = Type.Object({
   }),
 });
 
-const createDiseaseResponseSchemas = createResponseSchema({
+const createDiseaseResponseSchemas = createResponseSchemas({
   200: Type.Object({
     id: Type.Number({ description: 'Id of added disease data' }),
   }),

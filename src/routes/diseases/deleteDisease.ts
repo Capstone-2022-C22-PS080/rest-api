@@ -5,7 +5,7 @@ import {
   DefaultResponse204Schema,
   DefaultResponse404Schema,
 } from '../../common/schema';
-import { createResponseSchema, createSchema } from '../../common/schemaUtils';
+import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -17,7 +17,7 @@ const deleteDiseaseParamsSchema = Type.Object({
   id: Type.Number({ description: 'Disease Id meant to be deleted' }),
 });
 
-const deleteDiseaseResponseSchemas = createResponseSchema({
+const deleteDiseaseResponseSchemas = createResponseSchemas({
   204: DefaultResponse204Schema,
   404: DefaultResponse404Schema,
 });

@@ -4,7 +4,7 @@ import {
   DefaultResponse400Schema,
   DefaultResponse404Schema,
 } from '../../common/schema';
-import { createResponseSchema, createSchema } from '../../common/schemaUtils';
+import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -21,7 +21,7 @@ const getPredictionBodySchema = Type.Object({
   ),
 });
 
-const getPredictionResponseSchemas = createResponseSchema({
+const getPredictionResponseSchemas = createResponseSchemas({
   200: Type.Object({
     disease_name: Type.String({
       description: 'Name of the detected disease',
