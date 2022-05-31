@@ -1,4 +1,5 @@
 import { SwaggerOptions } from '@fastify/swagger';
+import constants from '../common/constants';
 
 const swaggerConfig: SwaggerOptions = {
   routePrefix: '/',
@@ -12,7 +13,7 @@ const swaggerConfig: SwaggerOptions = {
       url: 'https://swagger.io',
       description: 'Find more info here',
     },
-    schemes: ['http', 'https'],
+    schemes: constants.IS_PROD ? ['https', 'http'] : ['http', 'https'],
     consumes: ['application/json'],
     produces: ['application/json'],
     securityDefinitions: {
