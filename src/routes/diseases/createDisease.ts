@@ -1,8 +1,14 @@
 import { Type } from '@sinclair/typebox';
 import { FastifySchema } from 'fastify';
 import db from '../../common/db';
-import { defaultHeaderSchema } from '../../common/schema';
-import { createResponseSchemas } from '../../common/schemaUtils';
+import {
+  defaultHeaderSchema,
+  DefaultResponse401Schema,
+} from '../../common/schema';
+import {
+  createErrorResponseSchema,
+  createResponseSchemas,
+} from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -23,9 +29,19 @@ const createDiseaseBodySchema = Type.Object({
 });
 
 const createDiseaseResponseSchemas = createResponseSchemas({
-  200: Type.Object({
-    id: Type.Number({ description: 'Id of added disease data' }),
-  }),
+  200: Type.Object(
+    {
+      id: Type.Number({ description: 'Id of added disease data' }),
+    },
+    {
+      description: 'Success. Disease data are created.',
+    }
+  ),
+  400: createErrorResponseSchema(
+    400,
+    'One of the fields or more is not match requirement.'
+  ),
+  401: DefaultResponse401Schema,
 });
 
 export const createDiseaseSchema: FastifySchema = {

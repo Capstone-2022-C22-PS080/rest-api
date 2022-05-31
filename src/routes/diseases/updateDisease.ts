@@ -2,11 +2,15 @@ import { Type } from '@sinclair/typebox';
 import db from '../../common/db';
 import {
   defaultHeaderSchema,
-  DefaultResponse204Schema,
   DefaultResponse400Schema,
-  DefaultResponse404Schema,
+  DefaultResponse401Schema,
 } from '../../common/schema';
-import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
+import {
+  create204ResponseSchema,
+  createErrorResponseSchema,
+  createResponseSchemas,
+  createSchema,
+} from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -37,9 +41,10 @@ const updateDiseaseBodySchema = Type.Object({
 });
 
 const updateDiseaseResponseSchemas = createResponseSchemas({
-  204: DefaultResponse204Schema,
-  404: DefaultResponse404Schema,
+  204: create204ResponseSchema('Success. Disease updated.'),
+  404: createErrorResponseSchema(404, 'Disease are not found.'),
   400: DefaultResponse400Schema,
+  401: DefaultResponse401Schema,
 });
 
 type UpdateDiseaseSchema = HandlerGeneric<{

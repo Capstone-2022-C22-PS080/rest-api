@@ -1,6 +1,9 @@
 import { Type } from '@sinclair/typebox';
 import db from '../../common/db';
-import { defaultHeaderSchema } from '../../common/schema';
+import {
+  defaultHeaderSchema,
+  DefaultResponse401Schema,
+} from '../../common/schema';
 import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
@@ -31,11 +34,12 @@ const getDiseasesResponseSchemas = createResponseSchemas({
         }),
       },
       {
-        description: 'Disease description',
+        description: 'Array of disease data',
       }
     ),
-    { description: 'Array of diseases' }
+    { description: 'Success. Arrays of disease datas successfully retrieved' }
   ),
+  401: DefaultResponse401Schema,
 });
 
 type GetDiseasesSchema = HandlerGeneric<{

@@ -2,10 +2,14 @@ import { Type } from '@sinclair/typebox';
 import db from '../../common/db';
 import {
   defaultHeaderSchema,
-  DefaultResponse204Schema,
-  DefaultResponse404Schema,
+  DefaultResponse401Schema,
 } from '../../common/schema';
-import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
+import {
+  create204ResponseSchema,
+  createErrorResponseSchema,
+  createResponseSchemas,
+  createSchema,
+} from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -18,8 +22,9 @@ const deleteDiseaseParamsSchema = Type.Object({
 });
 
 const deleteDiseaseResponseSchemas = createResponseSchemas({
-  204: DefaultResponse204Schema,
-  404: DefaultResponse404Schema,
+  204: create204ResponseSchema('No Content. Disease successfully deleted'),
+  404: createErrorResponseSchema(404, 'Disease are not found.'),
+  401: DefaultResponse401Schema,
 });
 
 type DeleteDiseaseSchema = HandlerGeneric<{

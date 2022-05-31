@@ -29,6 +29,17 @@ export const DefaultResponse400Schema = Type.Object(
   }
 );
 
+export const DefaultResponse401Schema = Type.Object(
+  {
+    statusCode: Type.Literal(400),
+    error: Type.Literal('Unauthorized'),
+    message: Type.String(),
+  },
+  {
+    description: 'Unauthorized. Need Authorization Code',
+  }
+);
+
 export const DefaultResponse415Schema = Type.Object(
   {
     statusCode: Type.Literal(415),

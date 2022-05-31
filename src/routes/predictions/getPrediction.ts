@@ -2,6 +2,7 @@ import { Type } from '@sinclair/typebox';
 import {
   defaultHeaderSchema,
   DefaultResponse400Schema,
+  DefaultResponse401Schema,
   DefaultResponse404Schema,
 } from '../../common/schema';
 import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
@@ -22,20 +23,26 @@ const getPredictionBodySchema = Type.Object({
 });
 
 const getPredictionResponseSchemas = createResponseSchemas({
-  200: Type.Object({
-    disease_name: Type.String({
-      description: 'Name of the detected disease',
-    }),
-    disease_description: Type.String({
-      description: 'Description of the disease',
-    }),
-    first_aid_description: Type.String({
-      description: 'Description of the first aid treatment',
-    }),
-  }),
+  200: Type.Object(
+    {
+      disease_name: Type.String({
+        description: 'Name of the detected disease',
+      }),
+      disease_description: Type.String({
+        description: 'Description of the disease',
+      }),
+      first_aid_description: Type.String({
+        description: 'Description of the first aid treatment',
+      }),
+    },
+    {
+      description: 'Success. Prediction retrieved',
+    }
+  ),
 
   400: DefaultResponse400Schema,
   404: DefaultResponse404Schema,
+  401: DefaultResponse401Schema,
 });
 
 type GetPredictionSchema = HandlerGeneric<{

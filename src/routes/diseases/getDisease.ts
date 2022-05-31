@@ -2,9 +2,13 @@ import { Type } from '@sinclair/typebox';
 import db from '../../common/db';
 import {
   defaultHeaderSchema,
-  DefaultResponse404Schema,
+  DefaultResponse401Schema,
 } from '../../common/schema';
-import { createResponseSchemas, createSchema } from '../../common/schemaUtils';
+import {
+  createErrorResponseSchema,
+  createResponseSchemas,
+  createSchema,
+} from '../../common/schemaUtils';
 import {
   CustomRouteHandler,
   HandlerGeneric,
@@ -29,11 +33,12 @@ const getDiseaseResponseSchemas = createResponseSchemas({
       }),
     },
     {
-      description: 'Disease description',
+      description: 'Success. Disease data successfully retrieved.',
     }
   ),
 
-  404: DefaultResponse404Schema,
+  404: createErrorResponseSchema(404, 'Disease data of current id not found'),
+  401: DefaultResponse401Schema,
 });
 
 type GetDiseaseSchema = HandlerGeneric<{
