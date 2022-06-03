@@ -8,9 +8,9 @@ import { updateDisease, updateDiseaseSchema } from './updateDisease';
 const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
   app.post('', { schema: createDiseaseSchema }, createDisease);
   app.get('', { schema: getDiseasesSchema }, getDiseases);
-  app.get(':id', { schema: getDiseaseSchema }, getDisease);
-  app.put(':id', { schema: updateDiseaseSchema }, updateDisease);
-  app.delete(':id', { schema: deleteDiseaseSchema }, deleteDisease);
+  app.get('/:id', { schema: getDiseaseSchema }, getDisease);
+  app.put('/:id', { schema: updateDiseaseSchema }, updateDisease);
+  app.delete('/:id', { schema: deleteDiseaseSchema }, deleteDisease);
 };
 
 export default diseasesRoutes;
