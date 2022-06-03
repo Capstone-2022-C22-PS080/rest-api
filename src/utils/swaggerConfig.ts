@@ -2,7 +2,7 @@ import { SwaggerOptions } from '@fastify/swagger';
 import constants from '../common/constants';
 
 const swaggerConfig: SwaggerOptions = {
-  routePrefix: '/',
+  routePrefix: '/docs',
   swagger: {
     info: {
       title: 'REST API SSkin',
