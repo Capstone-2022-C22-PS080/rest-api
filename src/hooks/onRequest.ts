@@ -1,4 +1,10 @@
 import { onRequestHookHandler } from 'fastify';
+import firebaseAdminAuth from '../services/firebaseAdminAuth';
+
+type Decoded = {
+  uid: string;
+  iat: number;
+};
 
 export const onRequest: onRequestHookHandler = async function (req, res) {
   /**
@@ -18,6 +24,8 @@ export const onRequest: onRequestHookHandler = async function (req, res) {
    */
   try {
     await req.jwtVerify();
+    const decoded = req.user as Decoded;
+    await firebaseAdminAuth.getUser(decoded.uid);
   } catch (err) {
     res.send(err);
   }
