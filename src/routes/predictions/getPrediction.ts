@@ -78,22 +78,6 @@ export const getPredictionSchema = createSchema({
 
 export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
   async function (req, res) {
-    if (!constants.IS_PROD) {
-      /**
-       * Currently skip all operation
-       */
-      this.log.info(
-        'Currently prediction are not available on development environment'
-      );
-
-      return res.code(500).send({
-        statusCode: 500,
-        error: 'Internal Server Error',
-        message:
-          'Currently prediction are not available on development environment',
-      });
-    }
-
     /**
      * get base64 image
      */
@@ -110,8 +94,8 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
         return s;
       })
       .catch((err) => {
-        this.log.error(err);
         this.log.error(`Failed when getting projectId.`);
+        // this.log.error(err);
 
         return undefined;
       });
@@ -136,7 +120,7 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
       })
       .catch((err) => {
         this.log.error(`Failed when getting AI_ENDPOINT_ID`);
-        this.log.error(err);
+        // this.log.error(err);
 
         return undefined;
       });
@@ -146,6 +130,29 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
         statusCode: 500,
         error: 'Internal Server Error',
         message: `Failed to get prediction`,
+      });
+    }
+
+    /**
+     * get access token for request header to Vertex AI
+     */
+    const accessToken = await googleAuth
+      .getAccessToken()
+      .then((s) => {
+        this.log.info(`Access Token => ${s}`);
+
+        return s;
+      })
+      .catch(() => {
+        this.log.error(`Failed when getting access token for request`);
+        return undefined;
+      });
+
+    if (!accessToken) {
+      return res.code(500).send({
+        statusCode: 500,
+        error: 'Internal Server Error',
+        message: 'Failed to get prediction',
       });
     }
 
@@ -177,12 +184,17 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
               b64: base64Image,
             },
           ],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       )
       .then((v) => v.data.predictions)
       .catch((err) => {
         this.log.error(`Failed when POST request to endpoint ${endpointURL}`);
-        this.log.error(err);
+        // this.log.error(err);
       });
 
     if (!fetched || fetched.length === 0) {
@@ -234,7 +246,7 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
       })
       .catch((err) => {
         this.log.error(`Failed when findFirst disease from database.`);
-        this.log.error(err);
+        // this.log.error(err);
 
         return undefined;
       });
