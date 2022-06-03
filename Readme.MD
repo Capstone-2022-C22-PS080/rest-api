@@ -16,35 +16,41 @@
 
 ## Steps To Replicate
 
-- Prerequisites
+### Prerequisites
 
-  1. A GCP project.
-  2. Enabled App Engine API
-  3. A PostgreSQL database instance. Can be Cloud SQL or just ordinary dockerized PostgresSQL running on VM.
-  4. Deployed model to Vertex AI
-  5. Secret Manager that holds environment variables contained in app.yaml
-  6. Firebase Project
-  7. Default App Engine Service Account keys (.json) with permission to use Vertex AI and Secret Accessor, and Firebase admin.
+1. A GCP project.
+2. Enabled App Engine API
+3. A PostgreSQL database instance. Can be Cloud SQL or just ordinary dockerized PostgresSQL running on VM.
+4. Deployed model to Vertex AI
+5. Secret Manager that holds environment variables contained in app.yaml
+6. Firebase Project
+7. Default App Engine Service Account keys (.json) with permission to use Vertex AI and Secret Accessor, and Firebase admin.
 
  <br />
 
-- Development Environment
+### Development Environment
 
-  1. Install NodeJS 16 in your system
-  2. Fork this repository
-  3. Clone the forked repository
-  4. In the root project directory, run the following command in your terminal
+1. Install NodeJS 16 in your system
+2. Fork this repository
+3. Clone the forked repository
+4. In the root project directory, run the following command in your terminal
 
-  ```sh
-  npm i
-  ```
+```sh
+npm i
+```
 
-- Production Environment
+5. Then Run the following
 
-  1. Open Cloud Shell in your GCP Console
-  2. Clone the forked repository
-  3. Run the following command
+```sh
+npm run start
+```
 
-  ```sh
-  gcloud app deploy
-  ```
+### Production Environment
+
+1. Open Cloud Shell in your GCP Console
+2. Clone the forked repository
+3. Run the following command
+
+```sh
+gcloud app deploy
+```
