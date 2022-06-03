@@ -4,7 +4,7 @@
 
 ## API Documentation
 
-[Click Here](https://testing-purpose-349114.et.r.appspot.com/)
+[Click Here](https://testing-purpose-349114.et.r.appspot.com/docs)
 
 ## Tech Stack Used
 
