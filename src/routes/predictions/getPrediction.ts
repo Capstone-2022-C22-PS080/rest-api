@@ -117,12 +117,19 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
     /**
      * get project id
      */
-    const projectId = await googleAuth.getProjectId().catch((err) => {
-      this.log.error(err);
-      this.log.error(`Failed when getting projectId.`);
+    const projectId = await googleAuth
+      .getProjectId()
+      .then((s) => {
+        this.log.info(`Project ID => ${s}`);
 
-      return undefined;
-    });
+        return s;
+      })
+      .catch((err) => {
+        this.log.error(err);
+        this.log.error(`Failed when getting projectId.`);
+
+        return undefined;
+      });
 
     if (!projectId) {
       return res.code(500).send({
@@ -137,6 +144,11 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
      */
     const endpointId = await secretManager
       .getSecretValue(constants.AI_ENDPOINT_ID!)
+      .then((s) => {
+        this.log.info(`Endpoint ID => ${s}`);
+
+        return s;
+      })
       .catch((err) => {
         this.log.error(`Failed when getting AI_ENDPOINT_ID`);
         this.log.error(err);
@@ -166,6 +178,9 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
 
     type PredictionResponse = {
       predictions: number[][];
+      deployedModelId: string;
+      model: string;
+      modelDisplayName: string;
     };
 
     const fetched = await axios
@@ -213,9 +228,15 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
     const className = diseaseClassNames.at(classIndex);
     if (!className) {
       this.log.error(`No corresponding classname is found`);
+
+      return res.code(404).send({
+        statusCode: 404,
+        error: 'Not Found',
+        message: 'No corresponding classname is found',
+      });
     }
 
-    this.log.info(`class name => ${className}`);
+    this.log.info(`disease class name => ${className}`);
 
     /**
      * fetch data from database
@@ -240,6 +261,8 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
         message: `Disease data are not found.`,
       });
     }
+
+    this.log.info(`fetched disease from DB => ${disease.diseaseName}`);
 
     return res.code(200).send({
       disease_name: disease.diseaseName,
