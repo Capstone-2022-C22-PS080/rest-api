@@ -27,7 +27,7 @@ const diseaseClassNames = [
   'Seborrheic Keratoses and other Benign Tumors',
   'Tinea Ringworm Candidiasis and other Fungal Infections',
   'Warts Molluscum and other Viral Infections',
-];
+].map((e) => e.toLowerCase());
 
 const getPredictionBodySchema = Type.Object({
   base64: Type.RegEx(
@@ -241,7 +241,10 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
     const disease = await db.op.disease
       .findFirst({
         where: {
-          diseaseName: className,
+          diseaseName: {
+            mode: 'insensitive',
+            equals: className,
+          },
         },
       })
       .catch((err) => {
