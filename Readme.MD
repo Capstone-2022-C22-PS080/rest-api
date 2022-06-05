@@ -54,3 +54,7 @@ npm run start
 ```sh
 gcloud app deploy
 ```
+
+## License
+
+MIT
