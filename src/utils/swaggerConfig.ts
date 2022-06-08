@@ -6,7 +6,7 @@ const swaggerConfig: SwaggerOptions = {
   swagger: {
     info: {
       title: 'REST API SSkin',
-      description: 'REST API untuk aplikasi SSkin',
+      description: 'REST API for SSkin mobile app',
       version: '0.0.1',
     },
     externalDocs: {
@@ -20,6 +20,8 @@ const swaggerConfig: SwaggerOptions = {
       Authorization: {
         type: 'apiKey',
         in: 'header',
+        description:
+          'A Bearer token. Provided in format of the following: Bearer {jwt_token}',
         name: 'Authorization',
       },
     },
