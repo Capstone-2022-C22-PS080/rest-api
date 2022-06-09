@@ -41,40 +41,32 @@ export const deleteDiseaseSchema = createSchema({
   response: deleteDiseaseResponseSchemas,
 });
 
-export const deleteDisease: CustomRouteHandler<DeleteDiseaseSchema> = async (
-  req,
-  res
-) => {
-  try {
-    // check if exists
-    await db.op.disease
-      .findFirst({
-        where: {
-          id: req.params.id,
-        },
-      })
-      .then((d) => {
-        if (!d) {
-          return res.callNotFound();
-        }
-      })
-      .catch(() => {
-        return res.code(500).send();
-      });
-
-    return await db.op.disease
+export const deleteDisease: CustomRouteHandler<DeleteDiseaseSchema> =
+  async function (req, res) {
+    const deletedId = await db.op.disease
       .delete({
         where: {
           id: req.params.id,
         },
       })
-      .then(() => {
-        return res.code(204).send();
+      .then(({ id }) => {
+        this.log.info(`Deleted disease id => ${id}`);
+
+        return id;
       })
-      .catch(() => {
-        return res.code(500).send();
+      .catch((err) => {
+        this.log.error(`Failed when deleting disease`);
+        this.log.error(err);
+
+        return undefined;
       });
-  } catch (e) {
-    return res.code(500).send();
-  }
-};
+
+    /**
+     * check if disease exists
+     */
+    if (!deletedId) {
+      return res.callNotFound();
+    }
+
+    return res.code(204).send();
+  };

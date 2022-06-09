@@ -58,12 +58,9 @@ export type CreateDiseaseSchema = HandlerGeneric<{
   Reply: ResponseSchema<typeof createDiseaseResponseSchemas>;
 }>;
 
-export const createDisease: CustomRouteHandler<CreateDiseaseSchema> = async (
-  req,
-  res
-) => {
-  try {
-    return await db.op.disease
+export const createDisease: CustomRouteHandler<CreateDiseaseSchema> =
+  async function (req, res) {
+    const id = await db.op.disease
       .create({
         data: {
           diseaseName: req.body.disease_name,
@@ -72,12 +69,29 @@ export const createDisease: CustomRouteHandler<CreateDiseaseSchema> = async (
         },
       })
       .then(({ id }) => {
-        return res.code(200).send({ id });
+        this.log.info(`Created disease Id => ${id}`);
+
+        return id;
       })
-      .catch(() => {
-        return res.code(500).send();
+      .catch((err) => {
+        this.log.error(`Failed when creating disease`);
+        this.log.error(err);
+
+        return undefined;
       });
-  } catch (e) {
-    return res.code(500).send();
-  }
-};
+
+    /**
+     * check if create success
+     */
+    if (!id) {
+      return res.code(500).send({
+        statusCode: 500,
+        error: 'Internal Server Error',
+        message: 'Failed when creating disease',
+      });
+    }
+
+    return res.code(200).send({
+      id: id,
+    });
+  };

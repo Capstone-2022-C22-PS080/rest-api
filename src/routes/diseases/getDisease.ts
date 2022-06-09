@@ -55,33 +55,45 @@ export const getDiseaseSchema = createSchema({
   response: getDiseaseResponseSchemas,
 });
 
-export const getDisease: CustomRouteHandler<GetDiseaseSchema> = async (
+export const getDisease: CustomRouteHandler<GetDiseaseSchema> = async function (
   req,
   res
-) => {
-  try {
-    return await db.op.disease
-      .findFirst({
-        where: {
-          id: req.params.id,
-        },
-      })
-      .then((d) => {
-        if (!d) {
-          return res.callNotFound();
-        }
+) {
+  const foundDisease = await db.op.disease
+    .findFirst({
+      where: {
+        id: req.params.id,
+      },
+    })
+    .then((fetchedDisease) => {
+      if (!fetchedDisease) {
+        this.log.info(`Disease id of ${req.params.id} are not found`);
 
-        return res.code(200).send({
-          id: d.id,
-          disease_name: d.diseaseName,
-          disease_description: d.diseaseDescription,
-          first_aid_description: d.firstAidDescription,
-        });
-      })
-      .catch(() => {
-        return res.code(500).send();
-      });
-  } catch (e) {
-    return res.code(500).send();
+        return undefined;
+      }
+
+      this.log.info(`Fetched disease id => ${fetchedDisease.id}`);
+
+      return fetchedDisease;
+    })
+    .catch((err) => {
+      this.log.error(`Failed when fetching disease from DB`);
+      this.log.error(err);
+
+      return undefined;
+    });
+
+  /**
+   * check if exists
+   */
+  if (!foundDisease) {
+    return res.callNotFound();
   }
+
+  return res.code(200).send({
+    id: foundDisease.id,
+    disease_name: foundDisease.diseaseName,
+    disease_description: foundDisease.diseaseDescription,
+    first_aid_description: foundDisease.firstAidDescription,
+  });
 };

@@ -56,12 +56,9 @@ export const getDiseasesSchema = createSchema({
   response: getDiseasesResponseSchemas,
 });
 
-export const getDiseases: CustomRouteHandler<GetDiseasesSchema> = async (
-  req,
-  res
-) => {
-  try {
-    return await db.op.disease
+export const getDiseases: CustomRouteHandler<GetDiseasesSchema> =
+  async function (req, res) {
+    const diseases = await db.op.disease
       .findMany({
         where: {
           diseaseName: {
@@ -69,22 +66,30 @@ export const getDiseases: CustomRouteHandler<GetDiseasesSchema> = async (
           },
         },
       })
-      .then((vals) => {
-        return res.code(200).send(
-          vals.map((v) => ({
-            id: v.id,
-            disease_name: v.diseaseName,
-            disease_description: v.diseaseDescription,
-            first_aid_description: v.firstAidDescription,
-          }))
-        );
+      .then((fetchedDiseases) => {
+        this.log.info(`Fetched diseases => ${fetchedDiseases}`);
+
+        return fetchedDiseases.map((fetchedDisease) => ({
+          id: fetchedDisease.id,
+          disease_name: fetchedDisease.diseaseName,
+          disease_description: fetchedDisease.diseaseDescription,
+          first_aid_description: fetchedDisease.firstAidDescription,
+        }));
       })
       .catch((e) => {
-        console.error(e);
-        return res.code(500).send();
+        this.log.error(`Failed when getting diseases`);
+        this.log.error(e);
+
+        return undefined;
       });
-  } catch (e) {
-    console.error(e);
-    return res.code(500).send();
-  }
-};
+
+    if (!diseases) {
+      return res.code(500).send({
+        statusCode: 500,
+        error: 'Internal Server Error',
+        message: 'Failed when fetching diseases',
+      });
+    }
+
+    return res.code(200).send(diseases);
+  };

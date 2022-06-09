@@ -63,27 +63,9 @@ export const updateDiseaseSchema = createSchema({
   response: updateDiseaseResponseSchemas,
 });
 
-export const updateDisease: CustomRouteHandler<UpdateDiseaseSchema> = async (
-  req,
-  res
-) => {
-  try {
-    // check if exists
-    await db.op.disease
-      .findFirst({ where: { id: req.params.id } })
-      .then((d) => {
-        if (!d) {
-          return res.callNotFound();
-        }
-      })
-      .catch(() => {
-        return res.code(500).send();
-      });
-
-    /**
-     * update if exists
-     */
-    return await db.op.disease
+export const updateDisease: CustomRouteHandler<UpdateDiseaseSchema> =
+  async function (req, res) {
+    const updatedDisease = await db.op.disease
       .update({
         where: {
           id: req.params.id,
@@ -96,12 +78,23 @@ export const updateDisease: CustomRouteHandler<UpdateDiseaseSchema> = async (
         },
       })
       .then((v) => {
-        return res.code(204).send();
+        this.log.info(`Updated disease Id => ${v.id}`);
+
+        return v;
       })
-      .catch(() => {
-        return res.code(500).send();
+      .catch((err) => {
+        this.log.error(`Failed when updating disease => ${req.params.id}`);
+        this.log.error(err);
+
+        return undefined;
       });
-  } catch (e) {
-    return res.code(500).send();
-  }
-};
+
+    /**
+     * check if not exists
+     */
+    if (!updatedDisease) {
+      return res.callNotFound();
+    }
+
+    return res.code(204).send({});
+  };
