@@ -41,6 +41,7 @@ const getPredictionBodySchema = Type.Object({
 const getPredictionResponseSchemas = createResponseSchemas({
   200: Type.Object(
     {
+      id: Type.Number({ description: 'Id of the disease' }),
       disease_name: Type.String({
         description: 'Name of the detected disease',
       }),
@@ -265,6 +266,7 @@ export const getPrediction: CustomRouteHandler<GetPredictionSchema> =
     this.log.info(`fetched disease from DB => ${disease.diseaseName}`);
 
     return res.code(200).send({
+      id: disease.id,
       disease_name: disease.diseaseName,
       disease_description: disease.diseaseDescription,
       first_aid_description: disease.firstAidDescription,
