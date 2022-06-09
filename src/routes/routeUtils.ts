@@ -6,27 +6,19 @@ type Decoded = {
   iat: number;
 };
 
-export const onRequest: onRequestHookHandler = async function (req, res) {
-  /**
-   * Skip auth check for these routes
-   */
-  if (
-    req.routerPath.includes('/auth/token') ||
-    req.routerPath.includes('/static') ||
-    req.routerPath.includes('/json') ||
-    req.routerPath.includes('/docs')
-  ) {
-    return;
-  }
-
+export const onRequestAuthorize: onRequestHookHandler = async function (
+  req,
+  res
+) {
   /**
    * auth checks jwt by using Authorization header, with firebase uid as payload in jwt
    */
   try {
-    await req.jwtVerify();
+    await req.jwtVerify({ ignoreExpiration: true });
     const decoded = req.user as Decoded;
     await firebaseAdminAuth.getUser(decoded.uid);
   } catch (err) {
+    this.log.error(err);
     res.send(err);
   }
 };

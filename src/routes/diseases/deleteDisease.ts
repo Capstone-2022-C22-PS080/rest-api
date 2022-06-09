@@ -27,7 +27,7 @@ const deleteDiseaseResponseSchemas = createResponseSchemas({
   401: DefaultResponse401Schema,
 });
 
-type DeleteDiseaseSchema = HandlerGeneric<{
+export type DeleteDiseaseSchema = HandlerGeneric<{
   Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
   Params: ObjectSchemaToType<typeof deleteDiseaseParamsSchema>;
   Reply: ResponseSchema<typeof deleteDiseaseResponseSchemas>;

@@ -2,7 +2,7 @@ import fastifyCors from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
 import fastifySwagger from '@fastify/swagger';
 import { fastify } from 'fastify';
-import { onReady, onRequest } from './hooks';
+import { onReady } from './hooks';
 import { authRoutes, diseaseRoutes, predictionRoutes } from './routes';
 import { fastifyAppConfig, jwtConfig, swaggerConfig } from './utils';
 
@@ -25,7 +25,6 @@ app.register(predictionRoutes, { prefix: '/predictions' });
 /**
  * register hooks
  */
-app.addHook('onRequest', onRequest);
 app.addHook('onReady', onReady);
 
 export default app;

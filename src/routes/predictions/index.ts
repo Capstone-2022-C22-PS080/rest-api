@@ -1,8 +1,20 @@
 import { FastifyPluginAsync } from 'fastify';
-import { getPrediction, getPredictionSchema } from './getPrediction';
+import { onRequestAuthorize } from '../routeUtils';
+import {
+  getPrediction,
+  GetPredictionSchema,
+  getPredictionSchema,
+} from './getPrediction';
 
 const diseasesRoutes: FastifyPluginAsync = async (app, _) => {
-  app.post('', { schema: getPredictionSchema }, getPrediction);
+  app.post<GetPredictionSchema>(
+    '',
+    {
+      onRequest: [onRequestAuthorize],
+      schema: getPredictionSchema,
+    },
+    getPrediction
+  );
 };
 
 export default diseasesRoutes;

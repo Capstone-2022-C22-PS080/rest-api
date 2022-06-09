@@ -52,7 +52,7 @@ export const createDiseaseSchema: FastifySchema = {
   response: createDiseaseResponseSchemas,
 };
 
-type CreateDiseaseSchema = HandlerGeneric<{
+export type CreateDiseaseSchema = HandlerGeneric<{
   Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
   Body: ObjectSchemaToType<typeof createDiseaseBodySchema>;
   Reply: ResponseSchema<typeof createDiseaseResponseSchemas>;

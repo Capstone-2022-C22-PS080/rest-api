@@ -62,7 +62,7 @@ const getPredictionResponseSchemas = createResponseSchemas({
   401: DefaultResponse401Schema,
 });
 
-type GetPredictionSchema = HandlerGeneric<{
+export type GetPredictionSchema = HandlerGeneric<{
   Headers: ObjectSchemaToType<typeof defaultHeaderSchema>;
   Body: ObjectSchemaToType<typeof getPredictionBodySchema>;
   Reply: ResponseSchema<typeof getPredictionResponseSchemas>;
