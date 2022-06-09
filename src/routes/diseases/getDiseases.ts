@@ -50,7 +50,7 @@ export type GetDiseasesSchema = HandlerGeneric<{
 
 export const getDiseasesSchema = createSchema({
   tags: ['Disease'],
-  description: 'Get diseases data',
+  description: 'Get diseases data (Need Authorization)',
   headers: defaultHeaderSchema,
   querystring: getDiseasesQuerySchema,
   response: getDiseasesResponseSchemas,

@@ -69,8 +69,7 @@ export type GetPredictionSchema = HandlerGeneric<{
 }>;
 
 export const getPredictionSchema = createSchema({
-  description:
-    'Get prediction from Vertex AI endpoint (Cannot be used in development environment)',
+  description: 'Get prediction from Vertex AI endpoint (Need Authorization)',
   tags: ['Prediction'],
   headers: defaultHeaderSchema,
   body: getPredictionBodySchema,

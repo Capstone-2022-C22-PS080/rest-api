@@ -55,7 +55,7 @@ export type UpdateDiseaseSchema = HandlerGeneric<{
 }>;
 
 export const updateDiseaseSchema = createSchema({
-  description: 'Update disease data',
+  description: 'Update disease data (Need Authorization)',
   tags: ['Disease'],
   headers: defaultHeaderSchema,
   params: updateDiseaseParamsSchema,

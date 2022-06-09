@@ -46,7 +46,7 @@ const createDiseaseResponseSchemas = createResponseSchemas({
 
 export const createDiseaseSchema: FastifySchema = {
   tags: ['Disease'],
-  description: 'Create a disease data',
+  description: 'Create a disease data (Need Authorization)',
   headers: defaultHeaderSchema,
   body: createDiseaseBodySchema,
   response: createDiseaseResponseSchemas,

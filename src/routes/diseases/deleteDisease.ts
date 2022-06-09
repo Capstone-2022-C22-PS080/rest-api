@@ -34,7 +34,7 @@ export type DeleteDiseaseSchema = HandlerGeneric<{
 }>;
 
 export const deleteDiseaseSchema = createSchema({
-  description: 'Delete disease data by Id',
+  description: 'Delete disease data by Id (Need Authorization)',
   tags: ['Disease'],
   headers: defaultHeaderSchema,
   params: deleteDiseaseParamsSchema,
